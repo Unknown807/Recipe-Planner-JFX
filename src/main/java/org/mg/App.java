@@ -14,13 +14,13 @@ public class App extends Application {
 
     @Override
     public void start(Stage window) throws IOException {
-        scene = new Scene(loadFXML("primary"), 640, 480);
+        scene = new Scene(loadFXML("allRecipesPage"), 1080, 800);
         window.setScene(scene);
         window.show();
     }
 
-    static void setRoot(String fxml) throws IOException {
-        scene.setRoot(loadFXML(fxml));
+    static void setRoot(String pageName) throws IOException {
+        scene.setRoot(loadFXML(pageName));
     }
 
     private static Parent loadFXML(String fxml) throws IOException {
