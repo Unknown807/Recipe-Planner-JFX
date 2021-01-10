@@ -87,7 +87,7 @@
                   <HBox prefHeight="47.0" prefWidth="600.0">
                      <children>
                         <Region prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
-                        <Label text="Method">
+                        <Label text="Instructions">
                            <font>
                               <Font name="Forte" size="18.0" />
                            </font>
