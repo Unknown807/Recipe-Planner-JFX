@@ -1,3 +1,8 @@
+#categoryOptions {
+    -fx-font-family: Forte;
+    -fx-font-size: 18px;
+}
+
 #filterOptions {
     -fx-font-family: Forte;
     -fx-font-size: 16px;

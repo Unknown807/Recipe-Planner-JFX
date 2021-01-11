@@ -12,10 +12,10 @@ import static javafx.collections.FXCollections.observableArrayList;
 
 public class AllRecipesPageController implements Initializable {
 
-//    @FXML
-//    private void switchToSecondary() throws IOException {
-//        App.setRoot("secondary");
-//    }
+    @FXML
+    private void switchToCreateRecipePage() throws IOException {
+        App.setRoot("CreateRecipePage");
+    }
 
     @FXML
     private ComboBox<String> filterOptions;
