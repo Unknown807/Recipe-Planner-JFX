@@ -30,7 +30,7 @@
             </HBox>
             <HBox prefHeight="100.0" prefWidth="200.0" spacing="20.0">
                <children>
-                  <Button mnemonicParsing="false" text="Add Recipe" onAction="#switchToCreateRecipePage">
+                  <Button mnemonicParsing="false" onAction="#switchToCreateRecipePage" text="Add Recipe">
                      <font>
                         <Font name="Forte" size="16.0" />
                      </font>
@@ -61,7 +61,7 @@
       </VBox>
    </top>
    <center>
-      <TableView BorderPane.alignment="CENTER">
+      <TableView fx:id="recipeTable" BorderPane.alignment="CENTER">
         <columns>
           <TableColumn minWidth="100.0" prefWidth="400.0" text="Recipe Name" />
           <TableColumn minWidth="100.0" prefWidth="400.0" text="Category" />
