@@ -63,8 +63,8 @@
    <center>
       <TableView fx:id="recipeTable" BorderPane.alignment="CENTER">
         <columns>
-          <TableColumn minWidth="100.0" prefWidth="400.0" text="Recipe Name" />
-          <TableColumn minWidth="100.0" prefWidth="400.0" text="Category" />
+          <TableColumn fx:id="nameColumn" minWidth="100.0" prefWidth="400.0" text="Recipe Name" />
+          <TableColumn fx:id="categoryColumn" minWidth="100.0" prefWidth="400.0" text="Category" />
         </columns>
          <columnResizePolicy>
             <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />

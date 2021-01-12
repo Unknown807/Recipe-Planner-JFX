@@ -13,7 +13,9 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.SelectionMode;
+import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
@@ -25,7 +27,13 @@ public class AllRecipesPageController implements Initializable {
     private ComboBox<String> filterOptions;
 
     @FXML
-    private TableView recipeTable;
+    private TableView<Recipe> recipeTable;
+
+    @FXML
+    private TableColumn<Recipe, String> nameColumn;
+
+    @FXML
+    private TableColumn<Recipe, String> categoryColumn;
 
     @FXML
     private void switchToCreateRecipePage() throws IOException {
@@ -37,8 +45,11 @@ public class AllRecipesPageController implements Initializable {
         filterOptions.setItems(observableArrayList("Dessert", "Main Course", "Appetizer", "Side Dish"));
         recipeTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
+        nameColumn.setCellValueFactory(new PropertyValueFactory<>("recipeName"));
+        categoryColumn.setCellValueFactory(new PropertyValueFactory<>("categoryOption"));
+
         // Populate with all current recipes
-        ArrayList<String[]> recipeData = new ArrayList<>();
+        ObservableList<Recipe> recipeData = observableArrayList();
 
         String[] dirContents = (new File(".")).list();
         JSONParser parser = new JSONParser();
@@ -49,12 +60,12 @@ public class AllRecipesPageController implements Initializable {
 
                     JSONObject json = (JSONObject) recipeFile;
 
-                    String[] recipe = new String[] {
+                    recipeData.add(new Recipe(
                             (String) json.get("name"),
                             (String) json.get("category"),
-                    };
-
-                    recipeData.add(recipe);
+                            (String) json.get("ingredients"),
+                            (String) json.get("instructions")
+                    ));
 
                 } catch (FileNotFoundException fe) {
                     fe.printStackTrace();
@@ -64,7 +75,7 @@ public class AllRecipesPageController implements Initializable {
             }
         }
 
-
+        recipeTable.setItems(recipeData);
 
     }
 }
