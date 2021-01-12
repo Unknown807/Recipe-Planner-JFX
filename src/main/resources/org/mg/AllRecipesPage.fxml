@@ -35,12 +35,12 @@
                         <Font name="Forte" size="16.0" />
                      </font>
                   </Button>
-                  <Button layoutX="30.0" layoutY="10.0" mnemonicParsing="false" text="Edit Recipe">
+                  <Button layoutX="30.0" layoutY="10.0" mnemonicParsing="false" onAction="#viewRecipe" text="Edit Recipe">
                      <font>
                         <Font name="Forte" size="16.0" />
                      </font>
                   </Button>
-                  <Button layoutX="20.0" layoutY="20.0" mnemonicParsing="false" text="Remove Recipe">
+                  <Button layoutX="20.0" layoutY="20.0" mnemonicParsing="false" onAction="#removeRecipes" text="Remove Recipe">
                      <font>
                         <Font name="Forte" size="16.0" />
                      </font>
