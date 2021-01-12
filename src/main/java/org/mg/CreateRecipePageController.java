@@ -3,12 +3,15 @@ package org.mg;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 
+import javafx.stage.FileChooser;
 import org.json.simple.JSONObject;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
@@ -19,6 +22,10 @@ import static javafx.collections.FXCollections.observableArrayList;
 public class CreateRecipePageController implements Initializable {
 
     private ObservableList<String> categoryItems = observableArrayList("Dessert", "Main Course", "Appetizer", "Side Dish");
+    private String imagePath = "";
+
+    @FXML
+    private Button imageChooser;
 
     @FXML
     private ComboBox<String> categoryOptions;
@@ -35,6 +42,11 @@ public class CreateRecipePageController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         categoryOptions.setItems(categoryItems);
+    }
+
+    @FXML
+    private void switchToAllRecipesPage() throws IOException {
+        App.setRoot("AllRecipesPage");
     }
 
     @FXML
@@ -60,25 +72,26 @@ public class CreateRecipePageController implements Initializable {
         recipeData.put("category", recipeCategory);
         recipeData.put("ingredients", ingredients);
         recipeData.put("instructions", instructions);
+        recipeData.put("imagePath", imagePath);
 
         FileWriter file = new FileWriter("./"+recipeNameVal+".json");
         file.write(recipeData.toJSONString());
         file.close();
 
-    }
-
-    @FXML
-    private void switchToAllRecipesPage() throws IOException {
-        App.setRoot("AllRecipesPage");
-    }
-
-    @FXML
-    private void cancelRecipe() throws IOException{
-        recipeName.clear();
-        ingredientsText.clear();
-        instructionsText.clear();
-        categoryOptions.valueProperty().set(null);
-
         this.switchToAllRecipesPage();
     }
+
+    @FXML
+    private void chooseImage() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Image Files", "*.jpg", "*.png"));
+        File selectedFile = fileChooser.showOpenDialog(null);
+
+        if (selectedFile != null) {
+            imagePath = selectedFile.getAbsolutePath();
+            imageChooser.setText(selectedFile.getName());
+        }
+
+    }
+
 }

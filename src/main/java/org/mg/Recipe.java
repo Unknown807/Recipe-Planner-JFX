@@ -6,14 +6,24 @@ public class Recipe {
     private String categoryOption;
     private String recipeIngredients;
     private String recipeInstructions;
+    private String imagePath;
 
     public Recipe(String recipeName, String categoryOption,
-                  String recipeIngredients, String recipeInstructions) {
+                  String recipeIngredients, String recipeInstructions, String imagePath) {
 
         this.recipeName = recipeName;
         this.categoryOption = categoryOption;
         this.recipeIngredients = recipeIngredients;
         this.recipeInstructions = recipeInstructions;
+        this.imagePath = imagePath;
+    }
+
+    public String getImagePath() {
+        return imagePath;
+    }
+
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
     }
 
     public String getRecipeIngredients() {

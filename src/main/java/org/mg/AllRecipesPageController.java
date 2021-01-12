@@ -110,7 +110,8 @@ public class AllRecipesPageController implements Initializable {
                             (String) json.get("name"),
                             (String) json.get("category"),
                             (String) json.get("ingredients"),
-                            (String) json.get("instructions")
+                            (String) json.get("instructions"),
+                            (String) json.get("imagePath")
                     ));
 
                 } catch (FileNotFoundException fe) {
