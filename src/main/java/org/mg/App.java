@@ -10,11 +10,11 @@ import java.io.IOException;
 
 public class App extends Application {
 
-    private static Scene scene;
+    public static Scene scene;
 
     @Override
     public void start(Stage window) throws IOException {
-        scene = new Scene(loadFXML("allRecipesPage"), 1080, 800);
+        scene = new Scene(loadFXML("allRecipesPage"), 1280, 800);
         window.setScene(scene);
         window.show();
     }
