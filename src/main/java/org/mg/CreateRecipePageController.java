@@ -41,7 +41,7 @@ public class CreateRecipePageController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        categoryOptions.setItems(categoryItems);
+        this.categoryOptions.setItems(this.categoryItems);
     }
 
     @FXML
@@ -51,32 +51,23 @@ public class CreateRecipePageController implements Initializable {
 
     @FXML
     private void addRecipe() throws IOException {
-        String recipeNameVal = recipeName.getText();
+        String recipeNameVal = this.recipeName.getText();
         if (recipeNameVal.isBlank())
             return;
 
-        String recipeCategory = categoryOptions.getValue();
+        String recipeCategory = this.categoryOptions.getValue();
         if (recipeCategory == null)
             return;
 
-        String ingredients = ingredientsText.getText();
+        String ingredients = this.ingredientsText.getText();
         if (ingredients.isBlank())
             return;
 
-        String instructions = instructionsText.getText();
+        String instructions = this.instructionsText.getText();
         if (instructions.isBlank())
             return;
 
-        JSONObject recipeData = new JSONObject();
-        recipeData.put("name", recipeNameVal);
-        recipeData.put("category", recipeCategory);
-        recipeData.put("ingredients", ingredients);
-        recipeData.put("instructions", instructions);
-        recipeData.put("imagePath", imagePath);
-
-        FileWriter file = new FileWriter("./"+recipeNameVal+".json");
-        file.write(recipeData.toJSONString());
-        file.close();
+        App.saveJSONFile(recipeNameVal, recipeCategory, ingredients, instructions, this.imagePath);
 
         this.switchToAllRecipesPage();
     }
@@ -88,8 +79,8 @@ public class CreateRecipePageController implements Initializable {
         File selectedFile = fileChooser.showOpenDialog(null);
 
         if (selectedFile != null) {
-            imagePath = selectedFile.getAbsolutePath();
-            imageChooser.setText(selectedFile.getName());
+            this.imagePath = selectedFile.getAbsolutePath();
+            this.imageChooser.setText(selectedFile.getName());
         }
 
     }

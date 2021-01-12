@@ -55,6 +55,8 @@ public class AllRecipesPageController implements Initializable {
 
         controller.recipeNameLabel.setText(chosenRecipe.getRecipeName());
 
+        controller.setInitialCategory(chosenRecipe.getCategoryOption());
+
         controller.setInitialIngredients(chosenRecipe.getRecipeIngredients());
         controller.ingredientsText.setText(chosenRecipe.getRecipeIngredients());
 

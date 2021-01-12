@@ -15,14 +15,20 @@ import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
+import org.json.simple.JSONObject;
 
 public class ViewRecipePageController implements Initializable {
 
     public String initialIngredients;
     public String initialInstructions;
+    public String initialCategory;
 
     public String initialImagePath;
     public String newImagePath;
+
+    public void setInitialCategory(String initialCategory) {
+        this.initialCategory = initialCategory;
+    }
 
     public void setInitialImagePath(String initialImagePath) {
         this.initialImagePath = initialImagePath;
@@ -60,17 +66,20 @@ public class ViewRecipePageController implements Initializable {
     @FXML
     private void saveRecipeChange() throws IOException {
         Boolean toSave = false;
-        if (!(this.ingredientsText.getText().equals(this.initialIngredients)))
+
+        String ingredients = this.ingredientsText.getText();
+        if (!(ingredients.equals(this.initialIngredients)))
             toSave = true;
 
-        if (!(this.instructionsText.getText().equals(this.initialInstructions)))
+        String instructions = this.instructionsText.getText();
+        if (!(instructions.equals(this.initialInstructions)))
             toSave = true;
 
         if (!(this.initialImagePath.equals(this.newImagePath)))
             toSave = true;
 
         if (toSave) {
-            System.out.println("Different ingredients/instructions");
+            App.saveJSONFile(this.recipeNameLabel.getText(), this.initialCategory, ingredients, instructions, this.newImagePath);
         }
 
         this.switchToAllRecipesPage();
