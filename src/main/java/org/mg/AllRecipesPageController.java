@@ -2,6 +2,9 @@ package org.mg;
 
 import java.io.*;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -60,6 +63,9 @@ public class AllRecipesPageController implements Initializable {
 
         String imagePath = chosenRecipe.getImagePath();
         imagePath = (imagePath.isEmpty()) ? "./default_image.png" : imagePath;
+        Path path = Paths.get(imagePath);
+        if (!(Files.exists(path)))
+            imagePath = "./default_image.png";
 
         controller.setInitialImagePath(imagePath);
         FileInputStream inputStream = new FileInputStream(imagePath);
