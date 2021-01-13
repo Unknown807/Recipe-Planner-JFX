@@ -3,10 +3,7 @@ package org.mg;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 
 import javafx.stage.FileChooser;
 import org.json.simple.JSONObject;
@@ -15,6 +12,9 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ResourceBundle;
 
 import static javafx.collections.FXCollections.observableArrayList;
@@ -51,21 +51,41 @@ public class CreateRecipePageController implements Initializable {
 
     @FXML
     private void addRecipe() throws IOException {
+        boolean flag = true;
+        String message = "";
+
         String recipeNameVal = this.recipeName.getText();
-        if (recipeNameVal.isBlank())
-            return;
+        Path path = Paths.get("./"+recipeNameVal+".json");
 
         String recipeCategory = this.categoryOptions.getValue();
-        if (recipeCategory == null)
-            return;
-
         String ingredients = this.ingredientsText.getText();
-        if (ingredients.isBlank())
-            return;
-
         String instructions = this.instructionsText.getText();
-        if (instructions.isBlank())
+
+        if (recipeNameVal.isBlank()) {
+            flag = false;
+            message = "The recipe name cannot be left blank";
+        } else if (Files.exists(path)){
+            flag = false;
+            message = "A recipe with the same name already exists";
+        } else if (recipeCategory == null) {
+            flag = false;
+            message = "You haven't selected a recipe category";
+        } else if (ingredients.isBlank()) {
+            flag = false;
+            message = "The ingredients cannot be left blank";
+        } else if (instructions.isBlank()) {
+            flag = false;
+            message = "The instructions cannot be left blank";
+        }
+
+        if (!(flag)) {
+            Alert error = new Alert(Alert.AlertType.WARNING);
+            error.setTitle("Incorrect Input");
+            error.setHeaderText(null);
+            error.setContentText(message);
+            error.showAndWait();
             return;
+        }
 
         App.saveJSONFile(recipeNameVal, recipeCategory, ingredients, instructions, this.imagePath);
 

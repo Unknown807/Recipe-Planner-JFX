@@ -5,7 +5,6 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Iterator;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -16,17 +15,14 @@ import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Region;
-import javafx.stage.Stage;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
 import static javafx.collections.FXCollections.observableArrayList;
-import static javafx.collections.FXCollections.sort;
 
 public class AllRecipesPageController implements Initializable {
 
@@ -86,7 +82,7 @@ public class AllRecipesPageController implements Initializable {
     }
 
     @FXML
-    private void removeRecipes() {
+    private void removeRecipes() throws IOException {
         ObservableList<Recipe> recipesToRemove = this.recipeTable.getSelectionModel().getSelectedItems();
         if (recipesToRemove.size() < 1)
             return;
@@ -104,9 +100,11 @@ public class AllRecipesPageController implements Initializable {
             for (Recipe recipe: recipesToRemove){
                 File file = new File("./"+recipe.getRecipeName()+".json");
 
-                 deleted = file.delete();
+                deleted = file.delete();
 
                 if (!(deleted)) {
+                    System.out.println(file.exists());
+                    System.out.println(recipe.getRecipeName());
                     Alert failure = new Alert(Alert.AlertType.ERROR);
                     failure.setTitle("File Deletion Error");
                     failure.setHeaderText(null);
@@ -147,7 +145,8 @@ public class AllRecipesPageController implements Initializable {
         for (String file : dirContents) {
             if (file.endsWith(".json")) {
                 try {
-                    Object recipeFile = parser.parse(new FileReader("./" + file));
+                    FileReader fr = new FileReader("./" + file);
+                    Object recipeFile = parser.parse(fr);
 
                     JSONObject json = (JSONObject) recipeFile;
 
@@ -159,6 +158,7 @@ public class AllRecipesPageController implements Initializable {
                             (String) json.get("imagePath")
                     ));
 
+                    fr.close();
                 } catch (FileNotFoundException fe) {
                     fe.printStackTrace();
                 } catch (Exception e) {
