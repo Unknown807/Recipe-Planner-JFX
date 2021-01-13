@@ -5,10 +5,14 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Iterator;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
+import javafx.application.Platform;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -22,8 +26,11 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
 import static javafx.collections.FXCollections.observableArrayList;
+import static javafx.collections.FXCollections.sort;
 
 public class AllRecipesPageController implements Initializable {
+
+    private ObservableList<Recipe> allRecipes;
 
     @FXML
     private ComboBox<String> filterOptions;
@@ -92,26 +99,27 @@ public class AllRecipesPageController implements Initializable {
         Optional<ButtonType> result = confirmRemoval.showAndWait();
         if (result.get() == ButtonType.OK) {
 
-            ObservableList<Recipe> newItems = this.recipeTable.getItems();
-            Boolean success = true;
+            boolean deleted = false;
 
-            for (Recipe recipe: recipesToRemove) {
+            for (Recipe recipe: recipesToRemove){
                 File file = new File("./"+recipe.getRecipeName()+".json");
-                if (!(file.delete())) {
+
+                 deleted = file.delete();
+
+                if (!(deleted)) {
                     Alert failure = new Alert(Alert.AlertType.ERROR);
                     failure.setTitle("File Deletion Error");
                     failure.setHeaderText(null);
                     failure.setContentText("The file "+recipe.getRecipeName()+" could not be deleted");
                     failure.showAndWait();
-                    success = false;
                 } else {
-                    newItems.remove(recipe);
+                    Platform.runLater(() -> this.allRecipes.remove(recipe));
                 }
             }
 
             this.recipeTable.getSelectionModel().clearSelection();
 
-            if (success) {
+            if (deleted) {
                 Alert finish = new Alert(Alert.AlertType.INFORMATION);
                 finish.setTitle("Recipes Removed");
                 finish.setHeaderText(null);
@@ -124,14 +132,15 @@ public class AllRecipesPageController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        this.filterOptions.setItems(observableArrayList("Dessert", "Main Course", "Appetizer", "Side Dish"));
+        this.filterOptions.setItems(observableArrayList("Dessert", "Main Course", "Appetizer", "Side Dish", "All"));
+
         this.recipeTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
         this.nameColumn.setCellValueFactory(new PropertyValueFactory<>("recipeName"));
         this.categoryColumn.setCellValueFactory(new PropertyValueFactory<>("categoryOption"));
 
         // Populate with all current recipes
-        ObservableList<Recipe> recipeData = observableArrayList();
+        this.allRecipes = observableArrayList();
 
         String[] dirContents = (new File(".")).list();
         JSONParser parser = new JSONParser();
@@ -142,7 +151,7 @@ public class AllRecipesPageController implements Initializable {
 
                     JSONObject json = (JSONObject) recipeFile;
 
-                    recipeData.add(new Recipe(
+                    this.allRecipes.add(new Recipe(
                             (String) json.get("name"),
                             (String) json.get("category"),
                             (String) json.get("ingredients"),
@@ -158,7 +167,23 @@ public class AllRecipesPageController implements Initializable {
             }
         }
 
-        this.recipeTable.setItems(recipeData);
+        FilteredList<Recipe> filteredData = new FilteredList<>(this.allRecipes, p -> true);
+
+        this.filterOptions.valueProperty().addListener((observableValue, oldValue, newValue) -> {
+            filteredData.setPredicate(recipe -> {
+                if (newValue.equals("All"))
+                    return true;
+
+                if (recipe.getCategoryOption().equals(newValue))
+                    return true;
+
+                return false;
+            });
+        });
+
+        SortedList<Recipe> sortedData = new SortedList<>(filteredData);
+        sortedData.comparatorProperty().bind(this.recipeTable.comparatorProperty());
+        this.recipeTable.setItems(sortedData);
 
     }
 }
