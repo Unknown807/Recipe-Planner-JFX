@@ -5,8 +5,9 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Optional;
-import java.util.ResourceBundle;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
@@ -43,6 +44,110 @@ public class AllRecipesPageController implements Initializable {
     @FXML
     private void switchToCreateRecipePage() throws IOException {
         App.setRoot("CreateRecipePage");
+    }
+
+    private double convertToDouble(String str) {
+        if (str.contains("/")) {
+            String[] ops = str.split("/");
+            return Math.round((Double.parseDouble(ops[0])/Double.parseDouble(ops[1]))*10.0)/10.0;
+        }
+        else if (!(str.contains("."))) {
+            str += ".0";
+        }
+
+        return Double.parseDouble(str);
+    }
+
+    @FXML
+    private void generateShoppingList() {
+        ObservableList<Recipe> recipes = this.recipeTable.getSelectionModel().getSelectedItems();
+        if (recipes.size() < 1)
+            return;
+        else if (recipes.size() == 1){
+            for (String ingredient: recipes.get(0).getRecipeIngredients().split("\n")) {
+                System.out.println(ingredient);
+            }
+            return;
+            // Run write to file/pdf function here with default string of ingredients ^^^
+        }
+
+        HashMap<String, HashMap<String, Double>> ingTotal = new HashMap<>();
+
+        for (Recipe r: recipes) {
+            for (String ingredient: r.getRecipeIngredients().split("\n")) {
+                if (ingredient.isBlank()) continue;
+
+                boolean foundAlready = false;
+                String[] ingredientParts;
+
+                String ingKey = "recipeTotal";
+                double newIngAmt = 1.0;
+                String ingName = ingredient.trim().toLowerCase();
+                HashMap<String, Double> ingAmts = ingTotal.getOrDefault(ingName, new HashMap<>() {{
+                    put("recipeTotal", 0.0);
+                }});
+
+                for (String ingFormat: Arrays.asList("mg", "g", "kg", "ml", "l", "tbsp", "tsp")) {
+                    Pattern pattern = Pattern.compile("(\\d+.\\d+|\\d+|\\d+/\\d+)\\s*" + ingFormat + " .+", Pattern.CASE_INSENSITIVE);
+                    Matcher matcher = pattern.matcher(ingredient);
+                    boolean matchFound = matcher.find();
+
+                    if (matchFound) {
+
+                        ingredientParts = ingredient.split(ingFormat);
+                        ingKey = ingFormat;
+                        newIngAmt = this.convertToDouble(ingredientParts[0].trim());
+                        ingName = ingredientParts[1].trim().toLowerCase();
+
+                        ingAmts = ingTotal.getOrDefault(ingName, new HashMap<>() {{
+                            put("mg", 0.0);
+                            put("g", 0.0);
+                            put("kg", 0.0);
+                            put("ml", 0.0);
+                            put("l", 0.0);
+                            put("tbsp", 0.0);
+                            put("tsp", 0.0);
+                        }});
+
+                        foundAlready = true;
+                        break;
+                    }
+                }
+
+                if (!(foundAlready)) {
+                    Pattern pattern = Pattern.compile("(\\d+.\\d+|\\d+|\\d+/\\d+) .+");
+                    Matcher matcher = pattern.matcher(ingredient);
+                    boolean matchFound = matcher.find();
+
+                    if (matchFound) {
+                        ingredientParts = ingredient.split(" ", 2);
+                        newIngAmt = this.convertToDouble(ingredientParts[0].trim());
+                        ingName = ingredientParts[1].trim().toLowerCase();
+                        ingKey = "total";
+
+                        ingAmts = ingTotal.getOrDefault(ingName, new HashMap<>() {{
+                            put("total", 0.0);
+                        }});
+                    }
+                }
+
+                ingAmts.put(ingKey, ingAmts.get(ingKey)+newIngAmt);
+                ingTotal.put(ingName, ingAmts);
+
+            }
+
+        }
+
+        this.prettifyTotalIngredients(ingTotal);
+    }
+
+    private void prettifyTotalIngredients(HashMap<String, HashMap<String, Double>> ingMap) {
+//        for (Map.Entry<String, HashMap<String, Double>> set: ingMap.entrySet()) {
+//            System.out.println("KEY: "+set.getKey());
+//            for (Map.Entry<String, Double> set2: set.getValue().entrySet()) {
+//                System.out.println("    "+set2.getKey()+": "+set2.getValue());
+//            }
+//        }
     }
 
     @FXML
@@ -130,6 +235,9 @@ public class AllRecipesPageController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+
+        this.convertToDouble("7/6");
+
         this.filterOptions.setItems(observableArrayList("Dessert", "Main Course", "Appetizer", "Side Dish", "All"));
 
         this.recipeTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);

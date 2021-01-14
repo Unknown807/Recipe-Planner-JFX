@@ -35,7 +35,7 @@
                         <Font name="Forte" size="16.0" />
                      </font>
                   </Button>
-                  <Button layoutX="30.0" layoutY="10.0" mnemonicParsing="false" onAction="#viewRecipe" text="Edit Recipe">
+                  <Button layoutX="30.0" layoutY="10.0" mnemonicParsing="false" onAction="#viewRecipe" text="View Recipe">
                      <font>
                         <Font name="Forte" size="16.0" />
                      </font>
@@ -47,7 +47,7 @@
                   </Button>
                   <Region HBox.hgrow="ALWAYS" />
                   <ComboBox fx:id="filterOptions" prefWidth="150.0" promptText="Filter" styleClass="ComboBox" />
-                  <Button layoutX="20.0" layoutY="20.0" mnemonicParsing="false" text="Generate Shopping List">
+                  <Button layoutX="20.0" layoutY="20.0" mnemonicParsing="false" onAction="#generateShoppingList" text="Generate Shopping List">
                      <font>
                         <Font name="Forte" size="16.0" />
                      </font>
