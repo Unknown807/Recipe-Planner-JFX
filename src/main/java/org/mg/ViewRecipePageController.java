@@ -5,11 +5,14 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Cursor;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
@@ -79,7 +82,15 @@ public class ViewRecipePageController implements Initializable {
             toSave = true;
 
         if (toSave) {
-            App.saveJSONFile(this.recipeNameLabel.getText(), this.initialCategory, ingredients, instructions, this.newImagePath);
+            Alert confirmEdit = new Alert(Alert.AlertType.CONFIRMATION);
+            confirmEdit.setTitle("Confirm");
+            confirmEdit.setHeaderText("Recipe Edited");
+            confirmEdit.setContentText("Do you want to save the changes you made?");
+
+            Optional<ButtonType> result = confirmEdit.showAndWait();
+            if (result.get() == ButtonType.OK) {
+                App.saveJSONFile(this.recipeNameLabel.getText(), this.initialCategory, ingredients, instructions, this.newImagePath);
+            }
         }
 
         this.switchToAllRecipesPage();
