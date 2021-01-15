@@ -46,10 +46,21 @@ public class AllRecipesPageController implements Initializable {
         App.setRoot("CreateRecipePage");
     }
 
+    private String capitaliseWord(String str) {
+        char[] words = str.toCharArray();
+        words[0] = Character.toUpperCase(words[0]);
+        for (int i=1; i < words.length; i++) {
+            if (Character.isWhitespace(words[i-1])) {
+                words[i] = Character.toUpperCase(words[i]);
+            }
+        }
+        return new String(words);
+    }
+
     private double convertToDouble(String str) {
         if (str.contains("/")) {
             String[] ops = str.split("/");
-            return Math.round((Double.parseDouble(ops[0])/Double.parseDouble(ops[1]))*10.0)/10.0;
+            return Double.parseDouble(ops[0])/Double.parseDouble(ops[1]);
         }
         else if (!(str.contains("."))) {
             str += ".0";
@@ -58,18 +69,15 @@ public class AllRecipesPageController implements Initializable {
         return Double.parseDouble(str);
     }
 
+    private String removeTrailingZeros(double num) {
+        return (""+num).replaceAll("\\.0+$", "");
+    }
+
     @FXML
     private void generateShoppingList() {
         ObservableList<Recipe> recipes = this.recipeTable.getSelectionModel().getSelectedItems();
         if (recipes.size() < 1)
             return;
-        else if (recipes.size() == 1){
-            for (String ingredient: recipes.get(0).getRecipeIngredients().split("\n")) {
-                System.out.println(ingredient);
-            }
-            return;
-            // Run write to file/pdf function here with default string of ingredients ^^^
-        }
 
         HashMap<String, HashMap<String, Double>> ingTotal = new HashMap<>();
 
@@ -85,6 +93,7 @@ public class AllRecipesPageController implements Initializable {
                 String ingName = ingredient.trim().toLowerCase();
                 HashMap<String, Double> ingAmts = ingTotal.getOrDefault(ingName, new HashMap<>() {{
                     put("recipeTotal", 0.0);
+                    put("type", 0.0);
                 }});
 
                 for (String ingFormat: Arrays.asList("mg", "g", "kg", "ml", "l", "tbsp", "tsp")) {
@@ -99,6 +108,11 @@ public class AllRecipesPageController implements Initializable {
                         newIngAmt = this.convertToDouble(ingredientParts[0].trim());
                         ingName = ingredientParts[1].trim().toLowerCase();
 
+                        double msType;
+                        if ("mgkg".contains(ingFormat)) msType = 1.0;
+                        else if ("ml".contains(ingFormat)) msType = 2.0;
+                        else msType = 3.0;
+
                         ingAmts = ingTotal.getOrDefault(ingName, new HashMap<>() {{
                             put("mg", 0.0);
                             put("g", 0.0);
@@ -107,6 +121,8 @@ public class AllRecipesPageController implements Initializable {
                             put("l", 0.0);
                             put("tbsp", 0.0);
                             put("tsp", 0.0);
+                            put("type", 2.0);
+                            put("msType", msType);
                         }});
 
                         foundAlready = true;
@@ -127,6 +143,7 @@ public class AllRecipesPageController implements Initializable {
 
                         ingAmts = ingTotal.getOrDefault(ingName, new HashMap<>() {{
                             put("total", 0.0);
+                            put("type", 1.0);
                         }});
                     }
                 }
@@ -138,16 +155,73 @@ public class AllRecipesPageController implements Initializable {
 
         }
 
-        this.prettifyTotalIngredients(ingTotal);
+        this.prettifyShoppingList(ingTotal);
     }
 
-    private void prettifyTotalIngredients(HashMap<String, HashMap<String, Double>> ingMap) {
-//        for (Map.Entry<String, HashMap<String, Double>> set: ingMap.entrySet()) {
-//            System.out.println("KEY: "+set.getKey());
-//            for (Map.Entry<String, Double> set2: set.getValue().entrySet()) {
-//                System.out.println("    "+set2.getKey()+": "+set2.getValue());
-//            }
-//        }
+    private void prettifyShoppingList(HashMap<String, HashMap<String, Double>> ingMap) {
+        String shoppingList = "";
+
+        for (Map.Entry<String, HashMap<String, Double>> ingredients: ingMap.entrySet()) {
+            double total = 0.0;
+            String ingredient = this.capitaliseWord(ingredients.getKey());
+            HashMap<String, Double> ms = ingredients.getValue();
+            String type = String.valueOf(ms.get("type"));
+
+            String formattedIngredient = "";
+
+            switch (type) {
+                case "0.0":
+                    formattedIngredient = ingredient+" (for "+this.removeTrailingZeros(ms.get("recipeTotal"))+" recipes)";
+                    break;
+                case "1.0":
+                    formattedIngredient = ingredient+" (x"+this.removeTrailingZeros(ms.get("total"))+")";
+                    break;
+                case "2.0":
+                    if (ms.get("msType") == 1.0) {
+                        double kg = ms.get("kg");
+                        double g = ms.get("g");
+                        double mg = ms.get("mg");
+                        String suffix = "mg";
+
+                        if (kg != 0.0 || g >= 1000.0) {
+                            g = g*0.001;
+                            mg = mg*0.000001;
+                            suffix = "kg";
+                        } else if (g != 0.0 || mg >= 1000.0) {
+                            mg = mg*0.001;
+                            suffix = "g";
+                        }
+
+                        String sum = this.removeTrailingZeros(kg+g+mg);
+                        formattedIngredient = ingredient+" ("+sum+suffix+")";
+
+                    } else if (ms.get("msType") == 2.0) {
+                        double ml = ms.get("ml");
+                        double l = ms.get("l");
+                        String suffix = "ml";
+
+                        if (l != 0.0 || ml >= 1000.0) {
+                            ml = ml * 0.001;
+                            suffix = "l";
+                        }
+
+                        String sum = this.removeTrailingZeros(l+ml);
+                        formattedIngredient = ingredient+" ("+sum+suffix+")";
+
+                    } else {
+                        double tbspToGrams = ms.get("tbsp")*15.0;
+                        double tspToGrams = ms.get("tsp")*4.261;
+                        String sum = this.removeTrailingZeros(Math.round((tbspToGrams+tspToGrams)*10.0)/10.0);
+                        formattedIngredient = ingredient+" ("+sum+"g rounded)";
+                    }
+                    break;
+            }
+
+            shoppingList += formattedIngredient+"\n";
+        }
+
+        App.saveShoppingList(shoppingList);
+
     }
 
     @FXML
