@@ -1,14 +1,17 @@
 package org.mg;
 
+import com.itextpdf.text.*;
+import com.itextpdf.text.pdf.PdfWriter;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.CacheHint;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.json.simple.JSONObject;
 
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 
 public class App extends Application {
 
@@ -40,7 +43,31 @@ public class App extends Application {
     }
 
     public static void saveShoppingList(String shoppingList) {
-        System.out.println(shoppingList);
+        try {
+
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("Save Your Shopping List As?");
+            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("PDF Files", "*.pdf"));
+            File selectedFile = fileChooser.showSaveDialog(null);
+
+            if (selectedFile == null) return;
+
+            Document document = new Document();
+            PdfWriter.getInstance(document, new FileOutputStream(selectedFile.getAbsolutePath()));
+
+            document.open();
+            Font font = FontFactory.getFont(FontFactory.COURIER, 16, BaseColor.BLACK);
+
+            for (String ingredient: shoppingList.split("\n")) {
+                document.add(new Paragraph(ingredient, font));
+            }
+
+            document.close();
+
+        } catch (FileNotFoundException | DocumentException e) {
+            e.printStackTrace();
+        }
+
     }
 
     private static Parent loadFXML(String fxml) throws IOException {

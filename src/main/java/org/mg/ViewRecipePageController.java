@@ -99,6 +99,7 @@ public class ViewRecipePageController implements Initializable {
     @FXML
     private void changeImage() throws FileNotFoundException {
         FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Choose New Image");
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Image Files", "*.jpg", "*.png"));
         File selectedFile = fileChooser.showOpenDialog(null);
 
