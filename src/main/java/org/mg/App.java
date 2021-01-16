@@ -57,9 +57,18 @@ public class App extends Application {
 
             document.open();
             Font font = FontFactory.getFont(FontFactory.COURIER, 16, BaseColor.BLACK);
+            Font headerFont = FontFactory.getFont(FontFactory.COURIER_BOLD, 16, BaseColor.BLACK);
+            Font currentFont;
 
             for (String ingredient: shoppingList.split("\n")) {
-                document.add(new Paragraph(ingredient, font));
+                if (ingredient.contains(":")) {
+                    currentFont = headerFont;
+                    document.add(Chunk.NEWLINE);
+                } else {
+                    currentFont = font;
+                }
+
+                document.add(new Paragraph(ingredient, currentFont));
             }
 
             document.close();

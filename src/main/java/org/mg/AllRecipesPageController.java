@@ -82,7 +82,7 @@ public class AllRecipesPageController implements Initializable {
         if (recipes.size() < 1)
             return;
 
-        HashMap<String, HashMap<String, Double>> ingTotal = new HashMap<>();
+        LinkedHashMap<String, HashMap<String, Double>> ingTotal = new LinkedHashMap<>();
 
         for (Recipe r: recipes) {
             for (String ingredient: r.getRecipeIngredients().split("\n")) {
@@ -100,13 +100,13 @@ public class AllRecipesPageController implements Initializable {
                 }});
 
                 for (String ingFormat: Arrays.asList("mg", "g", "kg", "ml", "l", "tbsp", "tsp")) {
-                    Pattern pattern = Pattern.compile("(\\d+.\\d+|\\d+|\\d+/\\d+)\\s*" + ingFormat + " .+", Pattern.CASE_INSENSITIVE);
+                    Pattern pattern = Pattern.compile("(\\d+.\\d+|\\d+|\\d+/\\d+)\\s*" + ingFormat + "\\s.+", Pattern.CASE_INSENSITIVE);
                     Matcher matcher = pattern.matcher(ingredient);
                     boolean matchFound = matcher.find();
 
                     if (matchFound) {
 
-                        ingredientParts = ingredient.split(ingFormat);
+                        ingredientParts = ingredient.split(ingFormat, 2);
                         ingKey = ingFormat;
                         newIngAmt = this.convertToDouble(ingredientParts[0].trim());
                         ingName = ingredientParts[1].trim().toLowerCase();
@@ -124,7 +124,7 @@ public class AllRecipesPageController implements Initializable {
                             put("l", 0.0);
                             put("tbsp", 0.0);
                             put("tsp", 0.0);
-                            put("type", 2.0);
+                            put("type", 3.0);
                             put("msType", msType);
                         }});
 
@@ -148,6 +148,8 @@ public class AllRecipesPageController implements Initializable {
                             put("total", 0.0);
                             put("type", 1.0);
                         }});
+                    } else if (ingredient.contains(":")) {
+                        ingAmts.put("type", 2.0);
                     }
                 }
 
@@ -161,7 +163,7 @@ public class AllRecipesPageController implements Initializable {
         this.prettifyShoppingList(ingTotal);
     }
 
-    private void prettifyShoppingList(HashMap<String, HashMap<String, Double>> ingMap) {
+    private void prettifyShoppingList(LinkedHashMap<String, HashMap<String, Double>> ingMap) {
         String shoppingList = "";
 
         for (Map.Entry<String, HashMap<String, Double>> ingredients: ingMap.entrySet()) {
@@ -180,6 +182,9 @@ public class AllRecipesPageController implements Initializable {
                     formattedIngredient = ingredient+" (x"+this.removeTrailingZeros(ms.get("total"))+")";
                     break;
                 case "2.0":
+                    formattedIngredient = ingredient;
+                    break;
+                case "3.0":
                     if (ms.get("msType") == 1.0) {
                         double kg = ms.get("kg");
                         double g = ms.get("g");
