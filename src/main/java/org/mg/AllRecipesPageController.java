@@ -82,11 +82,13 @@ public class AllRecipesPageController implements Initializable {
         if (recipes.size() < 1)
             return;
 
-        LinkedHashMap<String, HashMap<String, Double>> ingTotal = new LinkedHashMap<>();
+        String allRecipeNames = "Ingredients For: ";
+        HashMap<String, HashMap<String, Double>> ingTotal = new HashMap<>();
 
         for (Recipe r: recipes) {
+            allRecipeNames += r.getRecipeName()+", ";
             for (String ingredient: r.getRecipeIngredients().split("\n")) {
-                if (ingredient.isBlank()) continue;
+                if (ingredient.isBlank() || ingredient.contains(":")) continue;
 
                 boolean foundAlready = false;
                 String[] ingredientParts;
@@ -124,7 +126,7 @@ public class AllRecipesPageController implements Initializable {
                             put("l", 0.0);
                             put("tbsp", 0.0);
                             put("tsp", 0.0);
-                            put("type", 3.0);
+                            put("type", 2.0);
                             put("msType", msType);
                         }});
 
@@ -148,8 +150,6 @@ public class AllRecipesPageController implements Initializable {
                             put("total", 0.0);
                             put("type", 1.0);
                         }});
-                    } else if (ingredient.contains(":")) {
-                        ingAmts.put("type", 2.0);
                     }
                 }
 
@@ -160,10 +160,10 @@ public class AllRecipesPageController implements Initializable {
 
         }
 
-        this.prettifyShoppingList(ingTotal);
+        this.prettifyShoppingList(ingTotal, allRecipeNames);
     }
 
-    private void prettifyShoppingList(LinkedHashMap<String, HashMap<String, Double>> ingMap) {
+    private void prettifyShoppingList(HashMap<String, HashMap<String, Double>> ingMap, String allRecipeNames) {
         String shoppingList = "";
 
         for (Map.Entry<String, HashMap<String, Double>> ingredients: ingMap.entrySet()) {
@@ -182,9 +182,6 @@ public class AllRecipesPageController implements Initializable {
                     formattedIngredient = ingredient+" (x"+this.removeTrailingZeros(ms.get("total"))+")";
                     break;
                 case "2.0":
-                    formattedIngredient = ingredient;
-                    break;
-                case "3.0":
                     if (ms.get("msType") == 1.0) {
                         double kg = ms.get("kg");
                         double g = ms.get("g");
@@ -228,7 +225,7 @@ public class AllRecipesPageController implements Initializable {
             shoppingList += formattedIngredient+"\n";
         }
 
-        App.saveShoppingList(shoppingList);
+        App.saveShoppingList(shoppingList, allRecipeNames);
 
     }
 

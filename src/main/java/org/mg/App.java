@@ -4,7 +4,6 @@ import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.PdfWriter;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.CacheHint;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.FileChooser;
@@ -42,7 +41,7 @@ public class App extends Application {
 
     }
 
-    public static void saveShoppingList(String shoppingList) {
+    public static void saveShoppingList(String shoppingList, String allRecipeNames) {
         try {
 
             FileChooser fileChooser = new FileChooser();
@@ -58,17 +57,10 @@ public class App extends Application {
             document.open();
             Font font = FontFactory.getFont(FontFactory.COURIER, 16, BaseColor.BLACK);
             Font headerFont = FontFactory.getFont(FontFactory.COURIER_BOLD, 16, BaseColor.BLACK);
-            Font currentFont;
 
+            document.add(new Paragraph(allRecipeNames, headerFont));
             for (String ingredient: shoppingList.split("\n")) {
-                if (ingredient.contains(":")) {
-                    currentFont = headerFont;
-                    document.add(Chunk.NEWLINE);
-                } else {
-                    currentFont = font;
-                }
-
-                document.add(new Paragraph(ingredient, currentFont));
+                document.add(new Paragraph(ingredient, font));
             }
 
             document.close();

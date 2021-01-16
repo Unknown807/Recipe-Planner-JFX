@@ -1,11 +1,18 @@
-#categoryOptions {
-    -fx-font-family: Forte;
-    -fx-font-size: 18px;
+.root {
+	-fx-background-image: url("bg.jpg");
+	-fx-background-repeat: stretch;
+	-fx-background-size: 2000 2000;
+	-fx-background-position: center center;
+	
 }
 
-#filterOptions {
-    -fx-font-family: Forte;
-    -fx-font-size: 16px;
+.button {
+	-fx-background-color: linear-gradient(#00d6a1, #7bbeea);
+}
+
+.combo-box {
+	-fx-font-family: Forte;
+	-fx-background-color: linear-gradient(#00d6a1, #7bbeea);
 }
 
 .table-view {
@@ -15,5 +22,14 @@
 
 .table-row-cell {
     -fx-font-family: Arial;
+    -fx-font-size: 16px;
+}
+
+
+#categoryOptions {
+    -fx-font-size: 18px;
+}
+
+#filterOptions {
     -fx-font-size: 16px;
 }

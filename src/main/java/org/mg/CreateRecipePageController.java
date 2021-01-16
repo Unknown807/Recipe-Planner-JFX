@@ -6,10 +6,8 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 
 import javafx.stage.FileChooser;
-import org.json.simple.JSONObject;
 
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
@@ -21,7 +19,6 @@ import static javafx.collections.FXCollections.observableArrayList;
 
 public class CreateRecipePageController implements Initializable {
 
-    private ObservableList<String> categoryItems = observableArrayList("Dessert", "Main Course", "Appetizer", "Side Dish");
     private String imagePath = "";
 
     @FXML
@@ -41,7 +38,7 @@ public class CreateRecipePageController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        this.categoryOptions.setItems(this.categoryItems);
+        this.categoryOptions.setItems(observableArrayList("Dessert", "Main Course", "Appetizer", "Side Dish"));
     }
 
     @FXML

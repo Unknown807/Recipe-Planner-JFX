@@ -52,7 +52,7 @@
       </HBox>
       <HBox prefHeight="80.0" prefWidth="1280.0">
          <children>
-            <Region prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
+            <Region prefHeight="71.0" prefWidth="131.0" HBox.hgrow="ALWAYS" />
             <Label text="Recipe Category">
                <font>
                   <Font name="Forte" size="18.0" />
@@ -74,7 +74,7 @@
       </HBox>
       <HBox prefHeight="100.0" prefWidth="200.0">
          <children>
-            <Region prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
+            <Region prefHeight="91.0" prefWidth="88.0" HBox.hgrow="ALWAYS" />
             <Label text="Recipe Image">
                <font>
                   <Font name="Forte" size="18.0" />
@@ -102,7 +102,7 @@
       </HBox>
       <HBox layoutX="10.0" layoutY="171.0" prefHeight="213.0" prefWidth="1280.0">
          <children>
-            <Region prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
+            <Region prefHeight="204.0" prefWidth="117.0" HBox.hgrow="ALWAYS" />
             <Label text="Ingredients">
                <font>
                   <Font name="Forte" size="18.0" />
@@ -127,7 +127,7 @@
       </HBox>
       <HBox prefHeight="221.0" prefWidth="1280.0">
          <children>
-            <Region prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
+            <Region prefHeight="212.0" prefWidth="114.0" HBox.hgrow="ALWAYS" />
             <Label text="Instructions">
                <font>
                   <Font name="Forte" size="18.0" />
