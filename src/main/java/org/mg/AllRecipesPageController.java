@@ -19,6 +19,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
+import javafx.scene.input.MouseButton;
 import javafx.scene.layout.Region;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -26,6 +27,8 @@ import org.json.simple.parser.JSONParser;
 import static javafx.collections.FXCollections.observableArrayList;
 
 public class AllRecipesPageController implements Initializable {
+
+    private String clickedRecipe = null;
 
     private ObservableList<Recipe> allRecipes;
 
@@ -315,6 +318,26 @@ public class AllRecipesPageController implements Initializable {
         this.filterOptions.setItems(observableArrayList("Dessert", "Main Course", "Appetizer", "Side Dish", "All"));
 
         this.recipeTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        this.recipeTable.setRowFactory( tv -> {
+            TableRow<Recipe> row = new TableRow<>();
+            row.setOnMouseClicked(e -> {
+                Recipe selectedRecipe = row.getItem();
+                String recipeName = selectedRecipe.getRecipeName();
+                if (e.getButton() == MouseButton.PRIMARY && selectedRecipe != null) {
+                    if (recipeName.equals(this.clickedRecipe)) {
+                        this.clickedRecipe = null;
+                        try {
+                            this.viewRecipe();
+                        } catch (IOException ioe) {
+                            ioe.printStackTrace();
+                        }
+                    } else {
+                        this.clickedRecipe = recipeName;
+                    }
+                }
+            });
+            return row;
+        });
 
         this.nameColumn.setCellValueFactory(new PropertyValueFactory<>("recipeName"));
         this.categoryColumn.setCellValueFactory(new PropertyValueFactory<>("categoryOption"));
