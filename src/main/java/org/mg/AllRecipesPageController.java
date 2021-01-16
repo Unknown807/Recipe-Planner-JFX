@@ -251,16 +251,19 @@ public class AllRecipesPageController implements Initializable {
         controller.instructionsText.setText(chosenRecipe.getRecipeInstructions());
 
         String imagePath = chosenRecipe.getImagePath();
-        imagePath = (imagePath.isEmpty()) ? "./default_image.png" : imagePath;
         Path path = Paths.get(imagePath);
-        if (!(Files.exists(path)))
-            imagePath = "./default_image.png";
+
+        if (imagePath.isEmpty() || !(Files.exists(path))) {
+            imagePath = "";
+            controller.recipeImage.setImage(new Image(App.class.getResourceAsStream("default_image.png")));
+        } else {
+            FileInputStream inputStream = new FileInputStream(imagePath);
+            Image image = new Image(inputStream);
+            controller.recipeImage.setImage(image);
+        }
 
         controller.setInitialImagePath(imagePath);
-        FileInputStream inputStream = new FileInputStream(imagePath);
-        Image image = new Image(inputStream);
 
-        controller.recipeImage.setImage(image);
 
         App.scene.setRoot(root);
     }
