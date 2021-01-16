@@ -19,6 +19,7 @@ public class App extends Application {
     @Override
     public void start(Stage window) throws IOException {
         scene = new Scene(loadFXML("allRecipesPage"), 1280, 800);
+        window.setTitle("Recipe Tracker");
         window.setScene(scene);
         window.show();
     }
