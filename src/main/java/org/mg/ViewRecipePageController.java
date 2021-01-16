@@ -33,17 +33,17 @@ public class ViewRecipePageController implements Initializable {
         this.initialCategory = initialCategory;
     }
 
-    public void setInitialImagePath(String initialImagePath) {
-        this.initialImagePath = initialImagePath;
-        this.newImagePath = initialImagePath;
-    }
-
     public void setInitialIngredients(String initialIngredients) {
         this.initialIngredients = initialIngredients;
     }
 
     public void setInitialInstructions(String initialInstructions) {
         this.initialInstructions = initialInstructions;
+    }
+
+    public void setInitialImagePath(String initialImagePath) {
+        this.initialImagePath = initialImagePath;
+        this.newImagePath = initialImagePath;
     }
 
     @FXML

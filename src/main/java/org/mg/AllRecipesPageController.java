@@ -324,8 +324,8 @@ public class AllRecipesPageController implements Initializable {
             TableRow<Recipe> row = new TableRow<>();
             row.setOnMouseClicked(e -> {
                 Recipe selectedRecipe = row.getItem();
-                String recipeName = selectedRecipe.getRecipeName();
                 if (e.getButton() == MouseButton.PRIMARY && selectedRecipe != null) {
+                    String recipeName = selectedRecipe.getRecipeName();
                     if (recipeName.equals(this.clickedRecipe)) {
                         this.clickedRecipe = null;
                         try {
