@@ -315,6 +315,15 @@ public class AllRecipesPageController implements Initializable {
 
     }
 
+    @FXML
+    private void exportRecipes() {
+        ObservableList<Recipe> recipes = this.recipeTable.getSelectionModel().getSelectedItems();
+        if (recipes.size() < 1)
+            return;
+
+        App.exportRecipes(recipes);
+    }
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 

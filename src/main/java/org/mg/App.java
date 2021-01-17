@@ -3,6 +3,7 @@ package org.mg;
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.PdfWriter;
 import javafx.application.Application;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -13,6 +14,9 @@ import org.json.simple.JSONObject;
 import java.io.*;
 
 public class App extends Application {
+
+    private static final Font textFont = FontFactory.getFont(FontFactory.COURIER, 16, BaseColor.BLACK);
+    private static final Font headerFont = FontFactory.getFont(FontFactory.COURIER_BOLD, 16, BaseColor.BLACK);
 
     public static Scene scene;
 
@@ -56,12 +60,10 @@ public class App extends Application {
             PdfWriter.getInstance(document, new FileOutputStream(selectedFile.getAbsolutePath()));
 
             document.open();
-            Font font = FontFactory.getFont(FontFactory.COURIER, 16, BaseColor.BLACK);
-            Font headerFont = FontFactory.getFont(FontFactory.COURIER_BOLD, 16, BaseColor.BLACK);
 
             document.add(new Paragraph(allRecipeNames, headerFont));
             for (String ingredient: shoppingList.split("\n")) {
-                document.add(new Paragraph(ingredient, font));
+                document.add(new Paragraph(ingredient, textFont));
             }
 
             document.close();
@@ -69,7 +71,52 @@ public class App extends Application {
         } catch (FileNotFoundException | DocumentException e) {
             e.printStackTrace();
         }
+    }
 
+    public static void exportRecipes(ObservableList<Recipe> recipes) {
+        try {
+
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("Export Your Recipes As?");
+            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("PDF Files", "*.pdf"));
+            File selectedFile = fileChooser.showSaveDialog(null);
+
+            if (selectedFile == null) return;
+
+            Document document = new Document();
+            PdfWriter.getInstance(document, new FileOutputStream(selectedFile.getAbsolutePath()));
+
+            document.open();
+
+            for (Recipe recipe: recipes) {
+                document.add(new Paragraph(recipe.getRecipeName()+" ("+recipe.getCategoryOption()+")", headerFont));
+                document.add(Chunk.NEWLINE);
+                document.add(new Paragraph("Ingredients:", headerFont));
+
+                for (String ingredient: recipe.getRecipeIngredients().split("\n")) {
+                    if (ingredient.contains(":")) {
+                        document.add(Chunk.NEWLINE);
+                    }
+                    document.add(new Paragraph(ingredient, textFont));
+                }
+                document.add(Chunk.NEWLINE);
+
+                document.add(new Paragraph("Instructions:", headerFont));
+                for (String instruction: recipe.getRecipeInstructions().split("\n")) {
+                    document.add(new Paragraph(instruction, textFont));
+                }
+
+                document.add(Chunk.NEWLINE);
+                document.add(Chunk.NEWLINE);
+                document.add(Chunk.NEWLINE);
+
+            }
+
+            document.close();
+
+        } catch (FileNotFoundException | DocumentException e) {
+            e.printStackTrace();
+        }
     }
 
     private static Parent loadFXML(String fxml) throws IOException {
