@@ -1,5 +1,5 @@
 .root {
-	-fx-background-image: url("bgblue.jpg");
+	-fx-background-image: url("woodbg.jpg");
 	-fx-background-repeat: stretch;
 	-fx-background-size: 2000 2000;
 	-fx-background-position: center center;
@@ -7,28 +7,32 @@
 }
 
 .button {
-	-fx-background-color: linear-gradient(#00d6a1, #7bbeea);
+	-fx-background-color: linear-gradient(#fa7070, #ffe800);
+}
+
+.desc_label {
+    -fx-background-color: linear-gradient(#daa348, #f57316);
 }
 
 .button:pressed {
-	-fx-background-color: linear-gradient(#33ffcc, #b4daf3);
+	-fx-background-color: linear-gradient(#fa7070, #fdf696);
 }
 
 .combo-box {
 	-fx-font-family: Forte;
-	-fx-background-color: linear-gradient(#00d6a1, #7bbeea);
+	-fx-background-color: linear-gradient(#fa7070, #ffe800);
 }
 
 .combo-box:pressed {
-	-fx-background-color: linear-gradient(#33ffcc, #b4daf3);
+	-fx-background-color: linear-gradient(#fa7070, #fdf696);
 }
 
 .titled-pane > .title {
-	-fx-background-color: linear-gradient(#00d6a1, #7bbeea);
+	-fx-background-color: linear-gradient(#daa348, #f57316);
 }
 
 .titled-pane > .content {
-	-fx-background-color: #e5f2fb;
+	-fx-background-color: #FFCBC1;
 }
 
 .table-view {
@@ -46,7 +50,7 @@
 }
 
 .table-view .column-header-background{
-    -fx-background-color: linear-gradient(#33ffcc, #b4daf3);
+    -fx-background-color: linear-gradient(#daa348, #f57316);
     -fx-background-radius: 7px 7px 0px 0px;
 }
 
@@ -89,10 +93,10 @@
 }
 
 .table-view .virtual-flow .scroll-bar:vertical .thumb{
-    -fx-background-color:  linear-gradient(to bottom, #33ffcc, #b4daf3);
+    -fx-background-color:  linear-gradient(to bottom, #daa348, #f57316);
 }
 .table-view .virtual-flow .scroll-bar:horizontal .thumb {
-    -fx-background-color:  linear-gradient(to right, #33ffcc, #b4daf3);
+    -fx-background-color:  linear-gradient(to right, #daa348, #f57316);
 }
 
 #categoryOptions {

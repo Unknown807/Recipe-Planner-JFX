@@ -11,7 +11,7 @@
    <children>
       <HBox prefHeight="47.0" prefWidth="600.0">
          <children>
-            <Label fx:id="recipeNameLabel" text="Recipe Name">
+            <Label fx:id="recipeNameLabel" styleClass="desc_label" text="Recipe Name">
                <font>
                   <Font name="Forte" size="31.0" />
                </font>
@@ -40,7 +40,7 @@
         <panes>
           <TitledPane animated="false" minHeight="-Infinity" text="Recipe Image">
                <content>
-                  <ImageView fx:id="recipeImage" onMouseClicked="#changeImage" fitHeight="680.0" fitWidth="1276.0" pickOnBounds="true" preserveRatio="true" smooth="false">
+                  <ImageView fx:id="recipeImage" fitHeight="680.0" fitWidth="1276.0" onMouseClicked="#changeImage" pickOnBounds="true" preserveRatio="true" smooth="false">
                      <viewport>
                         <Rectangle2D />
                      </viewport></ImageView>
@@ -58,7 +58,7 @@
                   <HBox prefHeight="47.0" prefWidth="600.0">
                      <children>
                         <Region prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
-                        <Label text="Ingredients">
+                        <Label styleClass="desc_label" text="Ingredients">
                            <font>
                               <Font name="Forte" size="18.0" />
                            </font>
@@ -87,7 +87,7 @@
                   <HBox prefHeight="47.0" prefWidth="600.0">
                      <children>
                         <Region prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
-                        <Label text="Instructions">
+                        <Label styleClass="desc_label" text="Instructions">
                            <font>
                               <Font name="Forte" size="18.0" />
                            </font>

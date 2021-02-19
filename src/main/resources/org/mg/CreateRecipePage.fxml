@@ -11,7 +11,7 @@
       <HBox prefHeight="80.0" prefWidth="1280.0">
          <children>
             <Region prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
-            <Label text="Add A New Recipe">
+            <Label styleClass="desc_label" text="Add A New Recipe">
                <HBox.margin>
                   <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                </HBox.margin>
@@ -28,7 +28,7 @@
       <HBox prefHeight="80.0" prefWidth="1280.0">
          <children>
             <Region prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
-            <Label text="Recipe Name">
+            <Label styleClass="desc_label" text="Recipe Name">
                <font>
                   <Font name="Forte" size="18.0" />
                </font>
@@ -53,7 +53,7 @@
       <HBox prefHeight="80.0" prefWidth="1280.0">
          <children>
             <Region prefHeight="71.0" prefWidth="131.0" HBox.hgrow="ALWAYS" />
-            <Label text="Recipe Category">
+            <Label styleClass="desc_label" text="Recipe Category">
                <font>
                   <Font name="Forte" size="18.0" />
                </font>
@@ -75,7 +75,7 @@
       <HBox prefHeight="100.0" prefWidth="200.0">
          <children>
             <Region prefHeight="91.0" prefWidth="88.0" HBox.hgrow="ALWAYS" />
-            <Label text="Recipe Image">
+            <Label styleClass="desc_label" text="Recipe Image">
                <font>
                   <Font name="Forte" size="18.0" />
                </font>
@@ -103,7 +103,7 @@
       <HBox layoutX="10.0" layoutY="171.0" prefHeight="213.0" prefWidth="1280.0">
          <children>
             <Region prefHeight="204.0" prefWidth="117.0" HBox.hgrow="ALWAYS" />
-            <Label text="Ingredients">
+            <Label styleClass="desc_label" text="Ingredients">
                <font>
                   <Font name="Forte" size="18.0" />
                </font>
@@ -128,7 +128,7 @@
       <HBox prefHeight="221.0" prefWidth="1280.0">
          <children>
             <Region prefHeight="212.0" prefWidth="114.0" HBox.hgrow="ALWAYS" />
-            <Label text="Instructions">
+            <Label styleClass="desc_label" text="Instructions">
                <font>
                   <Font name="Forte" size="18.0" />
                </font>

@@ -14,7 +14,7 @@
             <HBox>
                <children>
                   <Region HBox.hgrow="ALWAYS" />
-                  <Label text="Recipe Tracker">
+                  <Label styleClass="desc_label" text="Recipe Tracker">
                      <font>
                         <Font name="Forte" size="31.0" />
                      </font>
