@@ -326,9 +326,6 @@ public class AllRecipesPageController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-
-        this.convertToDouble("7/6");
-
         this.filterOptions.setItems(observableArrayList("Dessert", "Main Course", "Appetizer", "Side Dish", "All"));
 
         this.recipeTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
