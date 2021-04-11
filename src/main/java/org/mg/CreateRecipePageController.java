@@ -13,6 +13,7 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.ResourceBundle;
 
 import static javafx.collections.FXCollections.observableArrayList;
@@ -96,8 +97,23 @@ public class CreateRecipePageController implements Initializable {
         File selectedFile = fileChooser.showOpenDialog(null);
 
         if (selectedFile != null) {
-            this.imagePath = selectedFile.getAbsolutePath();
-            this.imageChooser.setText(selectedFile.getName());
+
+            try {
+
+                File newLocation = new File(selectedFile.getName());
+                Files.copy(selectedFile.toPath(), newLocation.toPath(), StandardCopyOption.REPLACE_EXISTING);
+
+                this.imagePath = selectedFile.getName();
+                this.imageChooser.setText(selectedFile.getName());
+
+            } catch (IOException ioe) {
+                Alert error = new Alert(Alert.AlertType.ERROR);
+                error.setTitle("File I/O Error");
+                error.setHeaderText(null);
+                error.setContentText("There was an error in using the selected image file, please try a different file");
+                error.showAndWait();
+                return;
+            }
         }
 
     }

@@ -27,3 +27,5 @@ target/
 *.json
 src/main/resources/META-INF/
 out/
+*.jpg
+*.png
