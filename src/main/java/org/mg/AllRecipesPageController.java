@@ -5,6 +5,7 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -253,17 +254,28 @@ public class AllRecipesPageController implements Initializable {
         String imagePath = chosenRecipe.getImagePath();
         Path path = Paths.get(imagePath);
 
+        boolean saveRequired = false;
+
         if (imagePath.isEmpty() || !(Files.exists(path))) {
             imagePath = "";
             controller.recipeImage.setImage(new Image(App.class.getResourceAsStream("default_image.png")));
         } else {
+            if (imagePath.contains("\\")) {
+                File sourceLocation = new File(imagePath);
+                imagePath = sourceLocation.getName();
+                File newLocation = new File(sourceLocation.getName());
+                Files.copy(sourceLocation.toPath(), newLocation.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                saveRequired = true;
+            }
             FileInputStream inputStream = new FileInputStream(imagePath);
             Image image = new Image(inputStream);
             controller.recipeImage.setImage(image);
         }
 
         controller.setInitialImagePath(imagePath);
-
+        if (saveRequired) {
+            controller.saveRecipeData();
+        }
 
         App.scene.setRoot(root);
     }

@@ -5,6 +5,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -89,7 +91,7 @@ public class ViewRecipePageController implements Initializable {
 
             Optional<ButtonType> result = confirmEdit.showAndWait();
             if (result.get() == ButtonType.OK) {
-                App.saveJSONFile(this.recipeNameLabel.getText(), this.initialCategory, ingredients, instructions, this.newImagePath);
+                saveRecipeData();
             }
         }
 
@@ -97,17 +99,40 @@ public class ViewRecipePageController implements Initializable {
     }
 
     @FXML
-    private void changeImage() throws FileNotFoundException {
+    public void saveRecipeData() throws IOException {
+        App.saveJSONFile(this.recipeNameLabel.getText(),
+                this.initialCategory,
+                this.ingredientsText.getText(),
+                this.instructionsText.getText(),
+                this.newImagePath);
+    }
+
+    @FXML
+    private void changeImage() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Choose New Image");
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Image Files", "*.jpg", "*.png"));
         File selectedFile = fileChooser.showOpenDialog(null);
 
         if (selectedFile != null) {
-            this.newImagePath = selectedFile.getAbsolutePath();
-            FileInputStream inputStream = new FileInputStream(this.newImagePath);
-            Image image = new Image(inputStream);
-            this.recipeImage.setImage(image);
+            try {
+
+                File newLocation = new File(selectedFile.getName());
+                Files.copy(selectedFile.toPath(), newLocation.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                this.newImagePath = selectedFile.getName();
+
+                FileInputStream inputStream = new FileInputStream(this.newImagePath);
+                Image image = new Image(inputStream);
+                this.recipeImage.setImage(image);
+
+            } catch (IOException ioe) {
+                Alert error = new Alert(Alert.AlertType.ERROR);
+                error.setTitle("File I/O Error");
+                error.setHeaderText(null);
+                error.setContentText("There was an error in using the selected image file, please try a different file");
+                error.showAndWait();
+                return;
+            }
         }
     }
 
